@@ -13,16 +13,17 @@ double UpdateL(double L0, double t0)
     L1 = L0 + dt*(s*A*exp(k*t0)*pow(L0,b)-d*L0);
     return L1;
 }
+const double b = 0.5;
+const double dt = 0.5;
+const double A = 100;
+const double s = 0.1;
+const double d = 0.025;
+const double k = 0.005;
 
 int main()
 {
     //parameters
-    double b = 0.5;
-    double dt = 0.5;
-    double A = 100;
-    double s = 0.1;
-    double d = 0.025;
-    double k = 0.005;
+
 
 
     cout << "START MALTHUS HERE \n";
