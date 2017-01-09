@@ -1,7 +1,7 @@
 #Some code done in C++ to experiment
 This sections contains various different subjects.  
 
-1. [Economic and population model based on Malthus theory](https://github.com/mintDan/Cppcode#econonic-and-population-model-based-on-malthus-theory)
+1. [Economic and population model based on Malthus theory](https://github.com/mintDan/Cppcode#economic-and-population-model-based-on-malthus-theory)
 2. [RK4 on system of equations with change of variables](https://github.com/mintDan/Cppcode#rk4-on-system-of-equations-with-change-of-variables)
 
 
