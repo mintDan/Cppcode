@@ -215,12 +215,12 @@ RungeKutta2(double t,
              double vx,
              double vy,
               double vz,
-              double (*f1)(double),
-            double (*f2)(double),
-            double (*f3)(double),
-            double (*f4)(double,double,double,double,double,double,double,double),
-            double (*f5)(double,double,double,double,double,double,double,double),
-            double (*f6)(double,double,double,double,double,double,double,double,double),
+//              double (*f1)(double),
+//            double (*f2)(double),
+//            double (*f3)(double),
+//            double (*f4)(double,double,double,double,double,double,double,double),
+//            double (*f5)(double,double,double,double,double,double,double,double),
+//            double (*f6)(double,double,double,double,double,double,double,double,double),
             fParamaters fparam,
             functionDaemon f){
 
@@ -247,19 +247,27 @@ RungeKutta2(double t,
     //Jeg bør have de fleste functions
     //fra struct, også den sidste Fv fra pointer,
     //således jeg har code example
+
+    double (*f1)(double);
+    double (*f2)(double);
+    double (*f3)(double);
+    double (*fvx)(double,double,double,double,double,double,double,double);
+    double (*fvy)(double,double,double,double,double,double,double,double);
+    double (*fvz)(double,double,double,double,double,double,double,double,double);
     f1 = f.fx;
     f2 = f.fy;
     f3 = f.fz;
-    //ffvx = f.fvx;
-    //ffvy = f.fvy;
-    //ffvz = f.fvz;
+    fvx = f.fvx;
+    fvy = f.fvy;
+    fvz = f.fvz;
 
+    //Doing steps
     k1x = h*f1(vx);
     k1y = h*f2(vy);
     k1z = h*f3(vz);
-    k1vx = h*f4(Fvcalc,v,vx,B,w,vz,phi,vy);
-    k1vy = h*f5(Fvcalc,v,vx,B,w,vz,phi,vy);
-    k1vz = h*f6(Fvcalc,v,vx,B,w,vz,phi,vy,g);
+    k1vx = h*fvx(Fvcalc,v,vx,B,w,vz,phi,vy);
+    k1vy = h*fvy(Fvcalc,v,vx,B,w,vz,phi,vy);
+    k1vz = h*fvz(Fvcalc,v,vx,B,w,vz,phi,vy,g);
 
     v = sqrt((vx+0.5*k1vx)*(vx+0.5*k1vx) + (vy+0.5*k1vy)*(vy+0.5*k1vy) + (vz+0.5*k1vz)*(vz+0.5*k1vz));
     Fvcalc = Fv(v,vd,inc);
@@ -477,8 +485,8 @@ int main(){
             //pos.z = z[n];
             //cout << "timestep n = " << n << "\n";
 
-            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
-            tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n],x[n],y[n],0.5*dt,z[n],vx[n],vy[n],vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
+            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fparam,f); //fx,fy,fz,fvx,fvy,fvz
+            tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n],x[n],y[n],0.5*dt,z[n],vx[n],vy[n],vz[n],fparam,f);
 
 
             dy = std::abs(y2a-y1a);
@@ -501,8 +509,8 @@ int main(){
                     //ellers så overwrite vi den måske eng ang for meget
                     dt2 = 2.0*dt;
 
-                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
-                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
+                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fparam,f);
+                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
 
                     dytest = std::abs(y2a-y1a);
 
@@ -550,8 +558,8 @@ int main(){
                 //cout << "Error was larger than eps \n";
                 while (dy>eps){
                     dt2 = 0.5*dt;
-                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
-                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
+                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
+                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fparam,f);
 
                     dytest = std::abs(y2a-y1a);
                     //cout << "Made dt smaller";
@@ -567,8 +575,8 @@ int main(){
                         break;
                     }
                 }
-                tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
-                tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt*0.5,z[n],vx[n], vy[n], vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
+                tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
+                tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt*0.5,z[n],vx[n], vy[n], vz[n],fparam,f);
 
                 dy = std::abs(y2a-y1a);
                 if (dy < eps)
@@ -604,7 +612,7 @@ int main(){
             //pos.y = y[n];
             //pos.z = z[n];
 
-            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fx,fy,fz,fvx,fvy,fvz,fparam,f);
+            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fparam,f);
 
             t[n+1] = t[n]+dt;
             x[n+1] = x2a;
@@ -623,22 +631,6 @@ int main(){
     string filestring = "Slider.txt";
     //cout << filestring;
     PrintToFile(t,x,y,z,vx,vy,vz,nsize,filestring);
-//    ofstream myfile;
-//    myfile.open("Slider.txt");
-//    for (int n=1;n<v.size();++n)
-//    {
-//        myfile << t[n] << " ";
-//        myfile << x[n] << " ";
-//        myfile << y[n] << " ";
-//        myfile << z[n] << " ";
-//        myfile << vx[n] << " ";
-//        myfile << vy[n] << " ";
-//        myfile << vz[n] << " " << "\n";
-//
-//    }
-//    myfile.close();
 
-
-    //cout << fparam.B;
     return 0;
 }
