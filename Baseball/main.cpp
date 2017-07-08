@@ -1,4 +1,4 @@
-/* iteration1.c */
+/* main.cpp */
 
 //#include <stdio.h>
 #include <math.h>
@@ -12,162 +12,21 @@
 #include <list>
 using namespace std;
 
-
-double stuff(double);
-double stuff(double a)
-{
-    printf("Hi from stuff");
-    printf("a = %3d",a);
-}
-
-void ptest(int, double *);
-void ptest(int n, double *fact)
-{
-    *fact = 1;
-    printf("n = %3d",n);
-
-}
-
-
-
-
-
-double f1(double, double,double);
-double f1(double t, double x, double y)
-{
-    double fx;
-    fx = y;
-    //cout << "f here" << fxy;
-    //cout << fxy;
-    return fx;
-
-}
-
-
-double f2(double,double,double);
-double f2(double t, double x, double y)
-{
-    double fv,k;
-    k = 1;
-    fv = -k*x;
-    //cout << "f here" << fxy;
-    //cout << fxy;
-    return fv;
-
-}
-
-//lidt usikker på arguments tilo runge kutta, men will find out
-double RungeKutta(double,double,double,double);
-double RungeKutta(double t, double x, double y, double h)
-{
-    double k1,k2,k3,k4,y1;
-    double fakt = 0.1666666;
-    k1 = h*f1(t,x,y);
-    k2 = h*f1(t,x+h/2,y+k1/2);
-    k3 = h*f1(t,x+h/2,y+k2/2);
-    k4 = h*f1(t,x+h,y+k3);
-    //cout << f(x,y) << " ";
-    y1 = y + fakt*(k1+2*k2+2*k3+k4);
-    //cout << k1 << " " << k2 << "\n" ;
-    //cout << y1 << "\n";
-    return y1;
-}
-
-
-std::tuple<double, double> RungeKutta1(double,double,double,double);
-std::tuple<double, double> RungeKutta1(double t, double x, double y, double h)
-{
-    //jeg har her x+h/2....
-    //MEN... h er jo dt... og x er position, så units passer ikke!
-    //Det er noget med der er en k1x,k1y, right?
-    //Hvis jeg husker rigtigt...
-    //Så hmmm... måske lidt som partial derivatives
-    //først step man x+k1x, og holder y constant?
-    //så step man y+k1y og holder x constant? etc maybe?
-    double k1x,k1y,k2x,k2y,k3x,k3y,k4x,k4y,x1,y1;
-    double fakt = 0.1666666;
-
-    k1x = h*f1(t,x,y);
-    k1y = h*f2(t,x,y);
-
-    k2x = h*f1(t+h/2,x+0.5*k1x,y+0.5*k1y);
-    k2y = h*f2(t+h/2,x+0.5*k1x,y+0.5*k1y);
-
-    k3x = h*f1(t+h/2,x+0.5*k2x,y+0.5*k2y);
-    k3y = h*f2(t+h/2,x+0.5*k2x,y+0.5*k2y);
-
-    k4x = h*f1(t+h,x+k3x,y+k3y);
-    k4y = h*f2(t+h,x+k3x,y+k3y);
-    //cout << f(x,y) << " ";
-    x1 = x + fakt*(k1x+2*k2x+2*k3x+k4x);
-    y1 = y + fakt*(k1y+2*k2y+2*k3y+k4y);
-    //cout << k1 << " " << k2 << "\n" ;
-    //x1 = 4.2;
-    //y1 = 5.4;
-    //cout << x1 << " " << y1 << "\n";
-
-    return std::make_tuple(x1, y1);
-}
-
-
-//Baseball functions
-//Lige nu er BÅDE variables OG functions smame name...
-//måske ikke så godt
-double fx(double);
-double fx(double vx){
-    double fx;
-    fx = vx;
-    return fx;
-}
-double fy(double);
-double fy(double vy){
-    double fy;
-    fy = vy;
-    return fy;
-}
-double fz(double);
-double fz(double vz){
-    double fz;
-    fz = vz;
-    return fz;
-}
-
-
-double Fv(double, double, double);
-double Fv(double v,double vd, double inc){
-    double Fv;
-    Fv = 0.0039 + 0.0058/(1+exp((v-vd)/inc));
-    return Fv;
-}
-
-double fvx(double,double,double,double,double,double,double,double);
-double fvx(double Fv,double v,double vx,double B, double w, double vz,double phi,double vy){
-    double afvx;
-    afvx = -Fv*v*vx + B*w*(vz*sin(phi)-vy*cos(phi));
-    return afvx;
-}
-double fvy(double, double, double, double, double,double,double,double);
-double fvy(double Fv,double v, double vx,double B, double w, double vz,double phi,double vy){
-    double afvy;
-    afvy = -Fv*v*vy + B*w*vx*cos(phi);
-    return afvy;
-}
-double fvz(double,double,double,double,double,double,double,double,double);
-double fvz(double Fv,double v, double vx,double B, double w, double vz,double phi,double vy,double g){
-    double afvz;
-    afvz = -g-Fv*v*vz - B*w*vx*sin(phi);
-    return afvz;
-}
-
-
-
 //Data structre
-struct Position {
-    double x;
-    double y;
-    double z;
-}pos;
-
+//struct Position {
+//    double x;
+//    double y;
+//    double z;
+//}; //}pos; kan man også skrive? hvad er pos så?
+//
+//struct fVariables {
+//    double x;
+//    double y;
+//    double z;
+//    double vx;
+//    double vy;
+//    double vz;
+//}; //}pos; kan man også skrive? hvad er pos så?
 
 struct fParamaters {
     double phi;
@@ -185,44 +44,105 @@ struct functionDaemon{
      //double (*funcp); // function pointer
      //double  (*fp)(double);      // Function pointer
 
-     double (*fx)(double);
-     double (*fy)(double);
-     double (*fz)(double);
-     double (*fvx)(double,double,double,double,double,double,double,double);
-     double (*fvy)(double,double,double,double,double,double,double,double);
-     double (*fvz)(double,double,double,double,double,double,double,double,double);
+     double (*fx)(double,double,double,double,double,double,double,double,struct fParamaters);
+     double (*fy)(double,double,double,double,double,double,double,double,struct fParamaters);
+     double (*fz)(double,double,double,double,double,double,double,double,struct fParamaters);
+     double (*fvx)(double,double,double,double,double,double,double,double,struct fParamaters);
+     double (*fvy)(double,double,double,double,double,double,double,double,struct fParamaters);
+     double (*fvz)(double,double,double,double,double,double,double,double,struct fParamaters);
 
      double (*Fv)(double, double, double);
  };
 
 
+//Baseball functions
+//Lige nu er BÅDE variables OG functions smame name...
+//måske ikke så godt
+double fx(double,double,double,double,double,double,double,double,struct fParamaters);
+double fx(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double fx;
+    fx = vx;
+    return fx;
+}
+double fy(double,double,double,double,double,double,double,double,struct fParamaters);
+double fy(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double fy;
+    fy = vy;
+    return fy;
+}
+double fz(double,double,double,double,double,double,double,double,struct fParamaters);
+double fz(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double fz;
+    fz = vz;
+    return fz;
+}
+
+
+double Fv(double, double, double);
+double Fv(double v,double vd, double inc){
+    double Fv;
+    Fv = 0.0039 + 0.0058/(1+exp((v-vd)/inc));
+    return Fv;
+}
+
+double fvx(double,double,double,double,double,double,double,double,struct fParamaters);
+double fvx(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double afvx;
+    double B = fparam.B;
+    double w = fparam.w;
+    double phi = fparam.phi;
+    double v = sqrt(vx*vx+vy*vy+vz*vz);
+    afvx = -Fv*v*vx + B*w*(vz*sin(phi)-vy*cos(phi));
+    return afvx;
+}
+double fvy(double,double,double,double,double,double,double,double,struct fParamaters);
+double fvy(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double B = fparam.B;
+    double w = fparam.w;
+    double phi = fparam.phi;
+    double v = sqrt(vx*vx+vy*vy+vz*vz);
+    double afvy;
+    afvy = -Fv*v*vy + B*w*vx*cos(phi);
+    return afvy;
+}
+double fvz(double,double,double,double,double,double,double,double,struct fParamaters);
+double fvz(double x,double y,double z,double vx,double vy,double vz,double t,double Fv,struct fParamaters fparam){
+    double B = fparam.B;
+    double w = fparam.w;
+    double phi = fparam.phi;
+    double g = fparam.g;
+    double v = sqrt(vx*vx+vy*vy+vz*vz);
+    double afvz;
+    afvz = -g-Fv*v*vz - B*w*vx*sin(phi);
+    return afvz;
+}
+
+
+
+
+void func1(){cout << "func1 here \n";}
+void func2(){cout << "func2 here \n";}
 //Baseball RungeKutta
 std::tuple<double, double,
             double, double,
             double, double>
 RungeKutta2(double,double,double,double,
-           double,double,double,double,struct fParamaters, functionDaemon);
+           double,double,double,double,
+           struct fParamaters, functionDaemon);
 
 std::tuple
-<double,double,
-double,double,
-double,double>
-RungeKutta2(double t,
-             double x,
-              double y,
-            double h,
-            double z,
-             double vx,
-             double vy,
-              double vz,
-//              double (*f1)(double),
-//            double (*f2)(double),
-//            double (*f3)(double),
-//            double (*f4)(double,double,double,double,double,double,double,double),
-//            double (*f5)(double,double,double,double,double,double,double,double),
-//            double (*f6)(double,double,double,double,double,double,double,double,double),
-            fParamaters fparam,
-            functionDaemon f){
+<double,double,double,double,double,double>
+RungeKutta2(
+double x,
+double y,
+double z,
+double vx,
+double vy,
+double vz,
+double t,
+double h,
+fParamaters fparam,
+functionDaemon f){
 
     double k1x,k1y,k2x,k2y,k3x,k3y,k4x,k4y,x1rk,y1rk,z1rk;
     double vx1rk,vy1rk,vz1rk;
@@ -248,70 +168,146 @@ RungeKutta2(double t,
     //fra struct, også den sidste Fv fra pointer,
     //således jeg har code example
 
-    double (*f1)(double);
-    double (*f2)(double);
-    double (*f3)(double);
-    double (*fvx)(double,double,double,double,double,double,double,double);
-    double (*fvy)(double,double,double,double,double,double,double,double);
-    double (*fvz)(double,double,double,double,double,double,double,double,double);
-    f1 = f.fx;
-    f2 = f.fy;
-    f3 = f.fz;
+    double (*fx)(double,double,double,double,double,double,double,double,struct fParamaters);
+    double (*fy)(double,double,double,double,double,double,double,double,struct fParamaters);
+    double (*fz)(double,double,double,double,double,double,double,double,struct fParamaters);
+    double (*fvx)(double,double,double,double,double,double,double,double,struct fParamaters);
+    double (*fvy)(double,double,double,double,double,double,double,double,struct fParamaters);
+    double (*fvz)(double,double,double,double,double,double,double,double,struct fParamaters);
+    fx = f.fx;
+    fy = f.fy;
+    fz = f.fz;
     fvx = f.fvx;
     fvy = f.fvy;
     fvz = f.fvz;
 
-    //Doing steps
-    k1x = h*f1(vx);
-    k1y = h*f2(vy);
-    k1z = h*f3(vz);
-    k1vx = h*fvx(Fvcalc,v,vx,B,w,vz,phi,vy);
-    k1vy = h*fvy(Fvcalc,v,vx,B,w,vz,phi,vy);
-    k1vz = h*fvz(Fvcalc,v,vx,B,w,vz,phi,vy,g);
+
+    //Jeg bør lave en array
+    //k1array
+    //k2array
+    //k3array
+    //k4array
+    const int neqs = 6;
+    double k1a[neqs] = {};
+    double k2a[neqs] = {};
+    double k3a[neqs] = {};
+    double k4a[neqs] = {};
+    double k5rk[neqs] = {};
+
+    //Mathematically, alle eqs skal tage samme antal arguments,
+    //så det fixer vi lige..
+    double (*nfs[neqs])(double,double,double,double,double,double,double,double,struct fParamaters) = {};
+
+    //ftest(*);
+    nfs[0] = fx;
+    nfs[1] = fy;
+    nfs[2] = fz;
+    nfs[3] = fvx;
+    nfs[4] = fvy;
+    nfs[5] = fvz;
+
+
+    //Doing "krok"
+//    k1a[0] = h*fx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1a[1] = h*fy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1a[2] = h*fz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1a[3] = h*fvx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1a[4] = h*fvy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1a[5] = h*fvz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+
+    for (int n=0;n<neqs;++n){
+        k1a[n] = h*nfs[n](x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    }
+
+    k1x = h*fx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    k1y = h*fy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    k1z = h*fz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    k1vx = h*fvx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    k1vy = h*fvy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+    k1vz = h*fvz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
 
     v = sqrt((vx+0.5*k1vx)*(vx+0.5*k1vx) + (vy+0.5*k1vy)*(vy+0.5*k1vy) + (vz+0.5*k1vz)*(vz+0.5*k1vz));
     Fvcalc = Fv(v,vd,inc);
 
-    k2x = h*fx(vx+0.5*k1vx);
-    k2y = h*fy(vy+0.5*k1vy);
-    k2z = h*fz(vz+0.5*k1vz);
-    k2vx = h*fvx(Fvcalc,v,vx+0.5*k1vx,B,w,vz+0.5*k1vz,phi,vy+0.5*k1vy);
-    k2vy = h*fvy(Fvcalc,v,vx+0.5*k1vx,B,w,vz+0.5*k1vz,phi,vy+0.5*k1vy);
-    k2vz = h*fvz(Fvcalc,v,vx+0.5*k1vx,B,w,vz+0.5*k1vz,phi,vy+0.5*k1vy,g);
+    k2x = h*fx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+    k2y = h*fy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+    k2z = h*fz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+    k2vx = h*fvx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+    k2vy = h*fvy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+    k2vz = h*fvz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
 
+//    k2a[0] = h*fx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2a[1] = h*fy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2a[2] = h*fz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2a[3] = h*fvx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2a[4] = h*fvy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2a[5] = h*fvz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+
+    for (int n=0;n<neqs;++n){
+        k2a[n] = h*nfs[n](x+0.5*k1a[0],y+0.5*k1a[1],z+0.5*k1a[2],
+                        vx+0.5*k1a[3],vy+0.5*k1a[4],vz+0.5*k1a[5],t,Fvcalc,fparam);
+    }
+    //3rd "krok"
     v = sqrt((vx+0.5*k2vx)*(vx+0.5*k2vx) + (vy+0.5*k2vy)*(vy+0.5*k2vy) + (vz+0.5*k2vz)*(vz+0.5*k2vz));
     Fvcalc = Fv(v,vd,inc);
 
-    k3x = h*fx(vx+0.5*k2vx);
-    k3y = h*fy(vy+0.5*k2vy);
-    k3z = h*fz(vz+0.5*k2vz);
-    k3vx = h*fvx(Fvcalc,v,vx+0.5*k2vx,B,w,vz+0.5*k2vz,phi,vy+0.5*k2vy);
-    k3vy = h*fvy(Fvcalc,v,vx+0.5*k2vx,B,w,vz+0.5*k2vz,phi,vy+0.5*k2vy);
-    k3vz = h*fvz(Fvcalc,v,vx+0.5*k2vx,B,w,vz+0.5*k2vz,phi,vy+0.5*k2vy,g);
+    k3x = h*fx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+    k3y = h*fy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+    k3z = h*fz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+    k3vx = h*fvx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+    k3vy = h*fvy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+    k3vz = h*fvz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
 
+   for (int n=0;n<neqs;++n){
+        k3a[n] = h*nfs[n](x+0.5*k2a[0],y+0.5*k2a[1],z+0.5*k2a[2],
+                        vx+0.5*k2a[3],vy+0.5*k2a[4],vz+0.5*k2a[5],t,Fvcalc,fparam);
+   }
+
+    //4rd "krok"
     v = sqrt((vx+k3vx)*(vx+k3vx) + (vy+k3vy)*(vy+k3vy) + (vz+k3vz)*(vz+k3vz));
     Fvcalc = Fv(v,vd,inc);
 
-    k4x = h*fx(vx+k3vx);
-    k4y = h*fy(vy+k3vy);
-    k4z = h*fz(vz+k3vz);
-    k4vx = h*fvx(Fvcalc,v,vx+k1vx,B,w,vz+k1vz,phi,vy+k1vy);
-    k4vy = h*fvy(Fvcalc,v,vx+k1vx,B,w,vz+k1vz,phi,vy+k1vy);
-    k4vz = h*fvz(Fvcalc,v,vx+k1vx,B,w,vz+k1vz,phi,vy+k1vy,g);
+    k4x = h*fx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+    k4y = h*fy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+    k4z = h*fz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+    k4vx = h*fvx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+    k4vy = h*fvy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+    k4vz = h*fvz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+
+   for (int n=0;n<neqs;++n){
+        k4a[n] = h*nfs[n](x+k3a[0],y+k3a[1],z+k3a[2],
+                        vx+k3a[3],vy+k3a[4],vz+k3a[5],t,Fvcalc,fparam);
+   }
+
 
     //cout << f(x,y) << " ";
-    x1rk = x + fakt*(k1x+2*k2x+2*k3x+k4x);
-    y1rk = y + fakt*(k1y+2*k2y+2*k3y+k4y);
-    z1rk = z + fakt*(k1z+2*k2z+2*k3z+k4z);
-    vx1rk = vx + fakt*(k1vx+2*k2vx+2*k3vx+k4vx);
-    vy1rk = vy + fakt*(k1vy+2*k2vy+2*k3vy+k4vy);
-    vz1rk = vz + fakt*(k1vz+2*k2vz+2*k3vz+k4vz);
+//    x1rk = x + fakt*(k1x+2*k2x+2*k3x+k4x);
+//    y1rk = y + fakt*(k1y+2*k2y+2*k3y+k4y);
+//    z1rk = z + fakt*(k1z+2*k2z+2*k3z+k4z);
+//    vx1rk = vx + fakt*(k1vx+2*k2vx+2*k3vx+k4vx);
+//    vy1rk = vy + fakt*(k1vy+2*k2vy+2*k3vy+k4vy);
+//    vz1rk = vz + fakt*(k1vz+2*k2vz+2*k3vz+k4vz);
+
+    //cout << f(x,y) << " ";
+//    x1rk = x + fakt*(k1a[0]+2*k2a[0]+2*k3a[0]+k4a[0]);
+//    y1rk = y + fakt*(k1a[1]+2*k2a[1]+2*k3a[1]+k4a[1]);
+//    z1rk = z + fakt*(k1a[2]+2*k2a[2]+2*k3a[2]+k4a[2]);
+//    vx1rk = vx + fakt*(k1a[3]+2*k2a[3]+2*k3a[3]+k4a[3]);
+//    vy1rk = vy + fakt*(k1a[4]+2*k2a[4]+2*k3a[4]+k4a[4]);
+//    vz1rk = vz + fakt*(k1a[5]+2*k2a[5]+2*k3a[5]+k4a[5]);
+
+    double k5rkhelper[neqs] = {x,y,z,vx,vy,vz};
+
+    for (int n=0;n<neqs;++n){
+        k5rk[n] = k5rkhelper[n] + fakt*(k1a[n]+2*k2a[n]+2*k3a[n]+k4a[n]);
+   }
     //cout << k1 << " " << k2 << "\n" ;
     //x1 = 4.2;
     //y1 = 5.4;
     //cout << x1 << " " << y1 << "\n";
 
-    return std::make_tuple(x1rk, y1rk, z1rk, vx1rk, vy1rk, vz1rk);
+    //return std::make_tuple(x1rk, y1rk, z1rk, vx1rk, vy1rk, vz1rk);
+    return std::make_tuple(k5rk[0], k5rk[1], k5rk[2], k5rk[3], k5rk[4], k5rk[5]);
 }
 //const int nmax = 200;
 
@@ -346,8 +342,7 @@ string filestring){
 }
 
 
-void func1(){cout << "func1 here \n";}
-void func2(){cout << "func2 here \n";}
+
 
 //typedef void (*lolpointer[2])(); works kinda halfway
 //void(*lolpointer[2])(); works kinda halfway
@@ -387,7 +382,32 @@ void ftest2(int *lolpointer){
 
 
 
+struct Foo
+{
+int id;
+};
+
+//void getResult(Foo** fooPtrArray)
+int getResult(Foo* fooPtrArray[], unsigned n)
+{
+cout << "I am in getResult" << endl;
+//Foo* fooPtrArray1[2];
+//fooPtrArray1 = fooPtrArray;
+}
+
+void (*pf[])(void) = {func1, func2};
+void test(int jump_index)
+{
+    /* Call the function specified by jump_index */
+    pf[jump_index]();
+}
+
 int main(){
+    //Foo* fooPtrArray[2] = ;
+    //getResult(fooPtrArray, 2);
+
+
+    test(1);
 
     struct functionDaemon f;
     f.fx = fx;
@@ -479,14 +499,8 @@ int main(){
     case 1:
         cout << "Adaptive Runge Kutta \n";
         for (int n=0;n<nmax;++n){
-            //struct Position pos;
-            //pos.x = x[n];
-            //pos.y = y[n];
-            //pos.z = z[n];
-            //cout << "timestep n = " << n << "\n";
-
-            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fparam,f); //fx,fy,fz,fvx,fvy,fvz
-            tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n],x[n],y[n],0.5*dt,z[n],vx[n],vy[n],vz[n],fparam,f);
+            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f); //fx,fy,fz,fvx,fvy,fvz
+            tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],0.5*dt,fparam,f);
 
 
             dy = std::abs(y2a-y1a);
@@ -509,8 +523,8 @@ int main(){
                     //ellers så overwrite vi den måske eng ang for meget
                     dt2 = 2.0*dt;
 
-                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fparam,f);
-                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
+                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt2,fparam,f);
+                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
 
                     dytest = std::abs(y2a-y1a);
 
@@ -558,8 +572,8 @@ int main(){
                 //cout << "Error was larger than eps \n";
                 while (dy>eps){
                     dt2 = 0.5*dt;
-                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
-                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt2,z[n],vx[n], vy[n], vz[n],fparam,f);
+                    tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
+                    tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt2,fparam,f);
 
                     dytest = std::abs(y2a-y1a);
                     //cout << "Made dt smaller";
@@ -575,8 +589,8 @@ int main(){
                         break;
                     }
                 }
-                tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n], x[n], y[n],dt,z[n],vx[n], vy[n], vz[n],fparam,f);
-                tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(t[n], x[n], y[n],dt*0.5,z[n],vx[n], vy[n], vz[n],fparam,f);
+                tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
+                tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],0.5*dt,fparam,f);
 
                 dy = std::abs(y2a-y1a);
                 if (dy < eps)
@@ -612,7 +626,7 @@ int main(){
             //pos.y = y[n];
             //pos.z = z[n];
 
-            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(t[n],x[n],y[n],dt,z[n],vx[n],vy[n],vz[n],fparam,f);
+            tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
 
             t[n+1] = t[n]+dt;
             x[n+1] = x2a;
