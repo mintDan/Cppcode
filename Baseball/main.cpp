@@ -8,7 +8,7 @@
 #include <iostream>
 #include <tuple>
 #include <cmath>
-#include <string>
+//#include <string> //allerede included i iostream
 #include <list>
 using namespace std;
 
@@ -449,11 +449,14 @@ int main(){
     cout << "\n";
     cout << reinterpret_cast<void*>(ftest);
     cout << "\n";
-    double k = 1,dt = 0.00001;
+    double k = 1;
+    double dt = 0.00001;
     double dt2;
-    double dytest;
-    double eps = 0.001;
-    double dy = 0.01;
+    double eps = 0.047;
+    double dx,dy,dz,dvx,dvy,dvz;
+    dx=dy=dz=dvx=dvy=dvz=0.01;
+    double dxtest,dytest,dztest,dvxtest,dvytest,dvztest;
+
     double v0 = 37.9984;
     double theta = 0.0174532925;
     double phi = 0;
@@ -486,6 +489,7 @@ int main(){
     double x1a,y1a,z1a,x2a,y2a,z2a;
     double vx1a,vy1a,vz1a,vx2a,vy2a,vz2a;
 
+    //tworze parameters do functions
     struct fParamaters fparam;
     fparam.phi = phi;
     fparam.vd = vd;
@@ -494,30 +498,51 @@ int main(){
     fparam.g = g;
     fparam.B = B;
 
-    const int Adaptive = 0;
+    //19 w tym chwila?
+    int DynamicChanges = 0;
+
+    const int Adaptive = 1;
     switch(Adaptive){
     case 1:
+
         cout << "Adaptive Runge Kutta \n";
         for (int n=0;n<nmax;++n){
             tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f); //fx,fy,fz,fvx,fvy,fvz
             tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],0.5*dt,fparam,f);
 
-
+            dx = std::abs(x2a-x1a);
             dy = std::abs(y2a-y1a);
+            dz = std::abs(z2a-z1a);
+            dvx = std::abs(vx2a-vx1a);
+            dvy = std::abs(vy2a-vy1a);
+            dvz = std::abs(vz2a-vz1a);
+
             //cout << "dy" << dy;
             //cout << "y2 =" << y2a << " "
             //     << "y1 = " << y1a << "\n";
 
             //cout << "x2 =" << x2a << " "
             //     << "x1 = " << x1a << "\n";
-            if (dy < eps){
+
+
+            //albo (dx <<
+            //w tym chwila, dx zawiesc..
+            //mosliwy robic loop
+            //AllTrue=True
+            //for dxi in errorlist:
+            //if dxi < eps:
+            //Pass
+            //else:
+            //AllTrue=False
+            //Break
+            if (dx < eps && dy < eps && dz < eps && dvx < eps && dvy < eps && dvz < eps){
             //error is smaller than eps, we accept the step forward
                 //cout << "Error was smaller than eps \n";
                 //hvis dy < eps, skal vi da også lige prøve
                 //at se om vi kan gøre dt STØRRE.
                 //Men, måske først EFTER dette step er lavet, så?
 
-                while (dy < eps) {
+                while (dx < eps && dy < eps && dz < eps && dvx < eps && dvy < eps && dvz < eps) {
                     //skal måske lige lave en ny dt2 til testing
                     //så jeg ikke ALTID overwrite den gamle dt...
                     //ellers så overwrite vi den måske eng ang for meget
@@ -526,12 +551,22 @@ int main(){
                     tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt2,fparam,f);
                     tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
 
+                    dxtest = std::abs(x2a-x1a);
                     dytest = std::abs(y2a-y1a);
-
+                    dztest = std::abs(z2a-z1a);
+                    dvxtest = std::abs(vx2a-vx1a);
+                    dvytest = std::abs(vy2a-vy1a);
+                    dvztest = std::abs(vz2a-vz1a);
                     //cout << "doubled dt = " << dt2
                     //     << " dytest = " << dytest << "\n";
-                    if (dytest < eps){
+                    if (dxtest < eps && dytest < eps && dztest < eps && dvxtest < eps && dvytest < eps && dvztest < eps){
                         //dy jeszcze wieksze niz eps po wyrosla dt
+                        dx = dxtest;
+                        dz = dztest;
+                        dvx = dvxtest;
+                        dvy = dvytest;
+                        dvz = dvztest;
+
                         dy = dytest; //nowy dy
                         dt = dt2; //nowy dt
                         //cout << "Made dt bigger";
@@ -539,6 +574,7 @@ int main(){
                         //cout << dt;
                         //cout << dytest;
                         //break;
+                        DynamicChanges++;
                     }
                     else{
                         //ostatni dytest byl wieksze niz eps, wiec
@@ -551,7 +587,9 @@ int main(){
                         break;
                     }
                 }
-                //blad byl mniejszy niz eps, wiec uzywam x2,y2,etc
+                //blad byl mniejszy niz eps, wiec uzywam x1,y1,etc
+                //x1a,y1a, etc pochodzi od while loop.
+                //nie musisz obliczac x1a,y1a snowu/jeszcze raz
                 t[n+1] = t[n]+dt;
                 x[n+1] = x1a;
                 y[n+1] = y1a;
@@ -561,8 +599,8 @@ int main(){
                 vz[n+1] = vz1a;
             }
 
-
-            else if (dy > eps)
+            //jesli jeden z nich jest wiekze niz eps, trzeba robic dt mniejszy
+            else if (dx > eps || dy > eps || dz > eps || dvx > eps || dvy > eps || dvz > eps)
             //error is bigger than eps, we must make dt smaller
             {
                 //dt = 0.5*dt;
@@ -570,30 +608,54 @@ int main(){
                 //cout << "\n";
 
                 //cout << "Error was larger than eps \n";
-                while (dy>eps){
+                while (dx > eps || dy > eps || dz > eps || dvx > eps || dvy > eps || dvz > eps){
                     dt2 = 0.5*dt;
                     tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
                     tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt2,fparam,f);
 
+
+                    dxtest = std::abs(x2a-x1a);
+                    dztest = std::abs(z2a-z1a);
+                    dvxtest = std::abs(vx2a-vx1a);
+                    dvytest = std::abs(vy2a-vy1a);
+                    dvztest = std::abs(vz2a-vz1a);
                     dytest = std::abs(y2a-y1a);
                     //cout << "Made dt smaller";
                     //cout << "\n";
-                    if (dytest > eps){
+                    if (dxtest > eps || dytest > eps || dztest > eps || dvxtest > eps || dvytest > eps || dvztest > eps){
+                        //The errors(Or just one of them) is still larger than eps, so we accept
+                        //the new smaller timestep, and now we have new errors, so we do dx = dxtest
+                        dx = dxtest;
+                        dz = dztest;
+                        dvx = dvxtest;
+                        dvy = dvytest;
+                        dvz = dvztest;
+
                         dy = dytest; //this should break the while loop
                         dt = dt2;
                         //cout << "Made dt smaller";
                         //cout << "\n";
+                        DynamicChanges++;
                         }
                     else{
                         dt = dt2;
                         break;
                     }
                 }
+
+                //we are done decreasing dt, now we take the final step
+                //this is perhaps not needed, maybe we can just reuse the old
+                //x2a,y2a from before? Or maybe it is needed
                 tie(x2a,y2a,z2a,vx2a,vy2a,vz2a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],dt,fparam,f);
                 tie(x1a,y1a,z1a,vx1a,vy1a,vz1a) = RungeKutta2(x[n],y[n],z[n],vx[n],vy[n],vz[n],t[n],0.5*dt,fparam,f);
 
+                dx = std::abs(x2a-x1a);
                 dy = std::abs(y2a-y1a);
-                if (dy < eps)
+                dz = std::abs(z2a-z1a);
+                dvx = std::abs(vx2a-vx1a);
+                dvy = std::abs(vy2a-vy1a);
+                dvz = std::abs(vz2a-vz1a);
+                if (dx < eps && dy < eps && dz < eps && dvx < eps && dvy < eps && dvz < eps)
                 //now we should have corrected for dy, it should now be lower than eps
                 {
                     t[n+1] = t[n]+dt;
@@ -607,15 +669,17 @@ int main(){
             }
 
             //exps[n+1] = exp(x[n]);
-            cout << x[n] << " " << y[n] << "\n";
+            cout << n << " " << x[n] << " " << y[n] << "\n";
             //cout << x[n+1] << " " << exps[n+1] << " " << y[n+1] << "\n";
             //cout << x[n+1] << " " << v[n+1] << "\n";
+
         }
 
 //    cout << x[0] << " " << y[0] << "\n";
 //    cout << x[1] << " " << y[1] << "\n";
 //    cout << x[2] << " " << y[2] << "\n";
 //    cout << x[3] << " " << y[3] << "\n";
+    cout << "Changes to dt: " << DynamicChanges;
     break;
     case 0:
         cout << "Static Runge Kutta \n";
@@ -635,7 +699,7 @@ int main(){
             vx[n+1] = vx2a;
             vy[n+1] = vy2a;
             vz[n+1] = vz2a;
-            cout << x[n] << " " << y[n] << "\n";
+            cout << n << " " << x[n] << " " << y[n] << "\n";
         }
     break;
     }
