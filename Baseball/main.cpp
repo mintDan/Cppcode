@@ -219,22 +219,23 @@ functionDaemon f){
         k1a[n] = h*nfs[n](x,y,z,vx,vy,vz,t,Fvcalc,fparam);
     }
 
-    k1x = h*fx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
-    k1y = h*fy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
-    k1z = h*fz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
-    k1vx = h*fvx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
-    k1vy = h*fvy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
-    k1vz = h*fvz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1x = h*fx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1y = h*fy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1z = h*fz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1vx = h*fvx(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1vy = h*fvy(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
+//    k1vz = h*fvz(x,y,z,vx,vy,vz,t,Fvcalc,fparam);
 
-    v = sqrt((vx+0.5*k1vx)*(vx+0.5*k1vx) + (vy+0.5*k1vy)*(vy+0.5*k1vy) + (vz+0.5*k1vz)*(vz+0.5*k1vz));
+    //v = sqrt((vx+0.5*k1vx)*(vx+0.5*k1vx) + (vy+0.5*k1vy)*(vy+0.5*k1vy) + (vz+0.5*k1vz)*(vz+0.5*k1vz));
+    v = sqrt((vx+0.5*k1a[3])*(vx+0.5*k1a[3]) + (vy+0.5*k1a[4])*(vy+0.5*k1a[4]) + (vz+0.5*k1a[5])*(vz+0.5*k1a[5]));
     Fvcalc = Fv(v,vd,inc);
 
-    k2x = h*fx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
-    k2y = h*fy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
-    k2z = h*fz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
-    k2vx = h*fvx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
-    k2vy = h*fvy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
-    k2vz = h*fvz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2x = h*fx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2y = h*fy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2z = h*fz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2vx = h*fvx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2vy = h*fvy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
+//    k2vz = h*fvz(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
 
 //    k2a[0] = h*fx(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
 //    k2a[1] = h*fy(x,y,z,vx+0.5*k1vx,vy+0.5*k1vy,vz+0.5*k1vz,t,Fvcalc,fparam);
@@ -248,15 +249,15 @@ functionDaemon f){
                         vx+0.5*k1a[3],vy+0.5*k1a[4],vz+0.5*k1a[5],t,Fvcalc,fparam);
     }
     //3rd "krok"
-    v = sqrt((vx+0.5*k2vx)*(vx+0.5*k2vx) + (vy+0.5*k2vy)*(vy+0.5*k2vy) + (vz+0.5*k2vz)*(vz+0.5*k2vz));
+    v = sqrt((vx+0.5*k2a[3])*(vx+0.5*k2a[3]) + (vy+0.5*k2a[4])*(vy+0.5*k2a[4]) + (vz+0.5*k2a[5])*(vz+0.5*k2a[5]));
     Fvcalc = Fv(v,vd,inc);
 
-    k3x = h*fx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
-    k3y = h*fy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
-    k3z = h*fz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
-    k3vx = h*fvx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
-    k3vy = h*fvy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
-    k3vz = h*fvz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3x = h*fx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3y = h*fy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3z = h*fz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3vx = h*fvx(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3vy = h*fvy(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
+//    k3vz = h*fvz(x,y,z,vx+0.5*k2vx,vy+0.5*k2vy,vz+0.5*k2vz,t,Fvcalc,fparam);
 
    for (int n=0;n<neqs;++n){
         k3a[n] = h*nfs[n](x+0.5*k2a[0],y+0.5*k2a[1],z+0.5*k2a[2],
@@ -264,15 +265,15 @@ functionDaemon f){
    }
 
     //4rd "krok"
-    v = sqrt((vx+k3vx)*(vx+k3vx) + (vy+k3vy)*(vy+k3vy) + (vz+k3vz)*(vz+k3vz));
+    v = sqrt((vx+k3a[3])*(vx+k3a[3]) + (vy+k3a[4])*(vy+k3a[4]) + (vz+k3a[5])*(vz+k3a[5]));
     Fvcalc = Fv(v,vd,inc);
 
-    k4x = h*fx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
-    k4y = h*fy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
-    k4z = h*fz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
-    k4vx = h*fvx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
-    k4vy = h*fvy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
-    k4vz = h*fvz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4x = h*fx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4y = h*fy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4z = h*fz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4vx = h*fvx(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4vy = h*fvy(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
+//    k4vz = h*fvz(x,y,z,vx+k3vx,vy+k3vy,vz+k3vz,t,Fvcalc,fparam);
 
    for (int n=0;n<neqs;++n){
         k4a[n] = h*nfs[n](x+k3a[0],y+k3a[1],z+k3a[2],
